@@ -13,8 +13,4 @@
 float GetTHD(unsigned int *dat,unsigned int index);
 bool transfrom_waves(void);
 
-extern volatile int16_t fftOutput[NUM_SAMPLES*2];
-extern uint32_t setFFTmaxFreqIndex;
-extern char usedDmaCh;
-
 #endif /* INCLUDE_WAVES_H_ */
