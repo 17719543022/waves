@@ -17,6 +17,7 @@
 #define BITREVERSE 1
 
 volatile int16_t fftOutput[NUM_SAMPLES * 2];
+float magBuffer[NUM_SAMPLES];
 uint32_t setFFTmaxFreqIndex;
 char usedDmaCh = 0;
 
@@ -77,7 +78,7 @@ bool transfrom_waves()
 
     volatile float32_t rmsBuff, dcBuff;
     float32_t rmsCalculation;
-    uint32_t ii, setFFTmaxValue;
+    uint32_t ii;
     int_fast32_t i32IPart[3], i32FPart[3];
     bool isBufAReady;
 
@@ -108,6 +109,21 @@ bool transfrom_waves()
         /* Compute the 1024 point FFT on the sampled data and then find the
          * FFT point for maximum energy and the energy value */
         arm_cfft_q15(&arm_cfft_sR_q15_len1024, (q15_t *)dstBuffer[ch], IFFTFLAG, BITREVERSE);
+
+        /*
+         * UARTprintf begin
+         */
+
+        int i;
+        for(i = 0; i < NUM_SAMPLES; i++) {
+            arm_status status = arm_sqrt_f32((int16_t)(dstBuffer[ch][i]/65536) * (int16_t)(dstBuffer[ch][i]/65536) + \
+                                             (int16_t)(dstBuffer[ch][i]%65536) * (int16_t)(dstBuffer[ch][i]%65536), \
+                                             &magBuffer[i]);
+        }
+
+        /*
+         * UARTprintf end
+         */
 
         /* Convert the floating point values to integer and fractional parts
          * for display on the serial console */
