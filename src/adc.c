@@ -12,6 +12,7 @@
 /* DMA Buffer declaration and buffer complete flag */
 uint32_t dstBufferA[NUM_SAMPLES];
 uint32_t dstBufferB[NUM_SAMPLES];
+uint32_t dstBuffer[NUM_SAMPLES*2];
 
 volatile bool setBufAReady = false;
 volatile bool setBufBReady = false;
@@ -65,8 +66,8 @@ void uMDA_for_adc_init()
     * structure. The mode is Basic mode so it will run to completion. */
    MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
                               UDMA_MODE_PINGPONG,
-                              (void *)&ADC0->SSFIFO2, (void *)&dstBufferA,
-                              sizeof(dstBufferA)/4);
+                              (void *)&ADC0->SSFIFO2, (void *)&dstBuffer,
+                              sizeof(dstBuffer)/8);
 
    /* Configure the control parameters for the alternate control structure for
     * the ADC0 Sequencer 2 channel. The alternate control structure is used for
@@ -83,8 +84,8 @@ void uMDA_for_adc_init()
     * completion */
    MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_ALT_SELECT,
                               UDMA_MODE_PINGPONG,
-                              (void *)&ADC0->SSFIFO2, (void *)&dstBufferB,
-                              sizeof(dstBufferB)/4);
+                              (void *)&ADC0->SSFIFO2, (void *)&dstBuffer[NUM_SAMPLES],
+                              sizeof(dstBuffer)/8);
 
    /* The uDMA ADC0 Sequencer 2 channel is primed to start a transfer. As
     * soon as the channel is enabled and the Timer will issue an ADC trigger,
@@ -181,8 +182,8 @@ void ADC0SS2_IRQHandler(void)
     {
         MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
                                    UDMA_MODE_PINGPONG,
-                                   (void *)&ADC0->SSFIFO2, (void *)&dstBufferA,
-                                   sizeof(dstBufferA)/4);
+                                   (void *)&ADC0->SSFIFO2, (void *)&dstBuffer,
+                                   sizeof(dstBuffer)/8);
         setBufAReady = true;
 //        MAP_TimerDisable(TIMER0_BASE, TIMER_A);
     }
@@ -194,8 +195,8 @@ void ADC0SS2_IRQHandler(void)
     {
         MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_ALT_SELECT,
                                    UDMA_MODE_PINGPONG,
-                                   (void *)&ADC0->SSFIFO2, (void *)&dstBufferB,
-                                   sizeof(dstBufferB)/4);
+                                   (void *)&ADC0->SSFIFO2, (void *)&dstBuffer[1024],
+                                   sizeof(dstBuffer)/8);
         setBufBReady = true;
         MAP_TimerDisable(TIMER0_BASE, TIMER_A);
     }

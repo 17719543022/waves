@@ -15,6 +15,7 @@
 /* DMA Buffer declaration and buffer complet flag */
 extern uint32_t dstBufferA[NUM_SAMPLES];
 extern uint32_t dstBufferB[NUM_SAMPLES];
+extern uint32_t dstBuffer[NUM_SAMPLES*2];
 
 extern volatile bool setBufAReady;
 extern volatile bool setBufBReady;
