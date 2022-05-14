@@ -32,6 +32,7 @@ bool isBtnPressed()
         if (!MAP_GPIOPinRead(GPIO_PORTJ_BASE, GPIO_PIN_0))
         {
             while (!MAP_GPIOPinRead(GPIO_PORTJ_BASE, GPIO_PIN_0));
+
             btnPressed = true;
         }
     }
@@ -43,19 +44,5 @@ void btnPressedEvent()
     if (isBtnPressed())
     {
         adc_with_uDMA_init();
-
-//        MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
-//        MAP_TimerEnable(TIMER0_BASE, TIMER_A);
-//        if (usedDmaCh == 0)
-//            MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
-//                                       UDMA_MODE_PINGPONG,
-//                                       (void *)&ADC0->SSFIFO2, (void *)&dstBufferA,
-//                                       sizeof(dstBufferA) / 4);
-//        else if(usedDmaCh == 1)
-//            MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_ALT_SELECT,
-//                                       UDMA_MODE_PINGPONG,
-//                                       (void *)&ADC0->SSFIFO2, (void *)&dstBufferB,
-//                                       sizeof(dstBufferB) / 4);
-//        usedDmaCh = 2;
     }
 }

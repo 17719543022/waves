@@ -17,15 +17,21 @@
 #define BITREVERSE 1
 
 float magBuffer[NUM_SAMPLES];
+q31_t correlation[NUM_SAMPLES*2-1];
 
 bool transfrom_waves()
 {
     uint32_t i;
-    bool isBufAReady;
+    bool isBufAReady = false;
+    bool isBufBReady = false;
 
-    if (isBufAReady = setBufAReady)
+    if ((isBufAReady = setBufAReady) && (isBufBReady = setBufBReady))
     {
         setBufAReady = false;
+        setBufBReady = false;
+
+        /* compute samples number of single period with self correlation */
+//        arm_correlate_q31((const q31_t *)dstBufferA, NUM_SAMPLES, (const q31_t *)dstBufferA, NUM_SAMPLES, correlation);
 
         /* Compute the 1024 point FFT on the sampled data and then find the
          * FFT point for maximum energy and the energy value */
@@ -40,5 +46,5 @@ bool transfrom_waves()
         UARTprintf("dc:%3d.%03d Volts\n\n", 0, 0);
     }
 
-    return isBufAReady;
+    return isBufAReady & isBufBReady;
 }
